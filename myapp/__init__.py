@@ -23,7 +23,8 @@ def output():
     startDate = "2016-11-30"
     endDate = "2016-12-30"
     df = quandl.get(quandlstr, start_date=startDate, end_date=endDate)
-    fig = TimeSeries(df)
+    df['dates'] = df.index.to_datetime()
+    fig = TimeSeries(df, x='dates')
     script, div =components(fig)
     title = 'Closing price for {} in the last month'.format(myticker)
     return render_template('plot.html', script=script, div=div, title=title)
