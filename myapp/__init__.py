@@ -22,12 +22,16 @@ def output():
     quandlstr = "WIKI/"+myticker+".11"
     startDate = "2016-11-30"
     endDate = "2016-12-30"
-    df = quandl.get(quandlstr, start_date=startDate, end_date=endDate)
-    df['dates'] = df.index.to_datetime()
-    fig = TimeSeries(df, x='dates')
-    script, div =components(fig)
-    title = 'Closing price for {} in the last month'.format(myticker)
-    return render_template('plot.html', script=script, div=div, title=title)
+    try:
+        df = quandl.get(quandlstr, start_date=startDate, end_date=endDate)
+        #Fixed TimeSeries display https://github.com/bokeh/bokeh/issues/4344
+        df['dates'] = df.index.to_datetime()
+        fig = TimeSeries(df, x='dates')
+        script, div =components(fig)
+        title = 'Closing price for {} in the last month'.format(myticker)
+        return render_template('plot.html', script=script, div=div, title=title)
+    except:
+        return render_template('error.html')
 
 @app.route('/mainpage', methods=['GET', 'POST'])
 def mainpage():
